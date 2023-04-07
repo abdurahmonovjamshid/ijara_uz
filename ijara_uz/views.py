@@ -65,27 +65,23 @@ class ApartmentDetailView(RetrieveUpdateDestroyAPIView):
 
 @api_view(('GET',))
 def search(request):
-    print(request.GET)
     result = Apartment.objects.all()
     query = request.GET.get("query")
     for_men = request.GET.get("for_men")
     is_flat = request.GET.get("is_flat")
     contract = request.GET.get("contract")
-    if not for_men:
-        for_men = ''
-
-    if not is_flat:
-        is_flat = ''
-
-    if not contract:
-        contract = ''
+    if contract:
+        result = result.filter(contract=contract)
+    if for_men:
+        result = result.filter(for_men=for_men)
+    if is_flat:
+        result = result.filter(is_flat=is_flat)
 
     if query:
         result = result.filter(
-            (Q(title__icontains=query) | Q(address__icontains=query) | Q(description__icontains=query) |
-             Q(list_date__icontains=query) |
-             Q(city__icontains=query)) & Q(for_men__icontains=for_men) & Q(is_flat__icontains=is_flat) &
-            Q(contract__icontains=contract)
+            Q(title__icontains=query) | Q(address__icontains=query) | Q(description__icontains=query) |
+            Q(list_date__icontains=query) | Q(price__icontains=query) |
+            Q(city__icontains=query)
         ).distinct()
     serializer = ApartmentSerializer(result, many=True)
     return Response(serializer.data)
