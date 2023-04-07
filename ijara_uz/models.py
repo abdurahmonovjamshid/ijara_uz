@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
@@ -64,3 +66,27 @@ class User(models.Model):
 
     def __str__(self):
         return self.full_name
+
+
+class Apartment(models.Model):
+    title = models.CharField(max_length=200)
+    address = models.CharField(max_length=200)
+    city = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    price = models.IntegerField()
+    bedrooms = models.IntegerField()
+    bathrooms = models.DecimalField(max_digits=2, decimal_places=1)
+    size = models.IntegerField()
+    photo_main = models.ImageField(upload_to='photos/%Y/%m/%d/')
+    photo_1 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+    photo_2 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+    photo_3 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+    photo_4 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+    list_date = models.DateTimeField(default=datetime.now, blank=True)
+    for_men = models.BooleanField(default=True)
+    contract = models.BooleanField(default=True)
+    is_flat = models.BooleanField(default=True)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title

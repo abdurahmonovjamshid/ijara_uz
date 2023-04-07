@@ -8,4 +8,6 @@ urlpatterns = [
 
     path('user/', views.UserListView.as_view()),
     path('user/<str:phone>', views.UserDetailView.as_view()),
+
+    path('apartment/', views.ApartmentListCreateView.as_view()),
 ]

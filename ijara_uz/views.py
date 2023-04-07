@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
+from rest_framework.generics import (CreateAPIView, ListAPIView,
+                                     RetrieveUpdateDestroyAPIView,
+                                     get_object_or_404, ListCreateAPIView, )
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 
-from ijara_uz.models import CustomUser, User
-from ijara_uz.serializers import RegisterSerializer, UserSerializer
+from ijara_uz.models import CustomUser, User, Apartment
+from ijara_uz.serializers import RegisterSerializer, UserSerializer, ApartmentSerializer
 
 
 # Create your views here.
@@ -45,3 +47,9 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
+
+
+class ApartmentListCreateView(ListCreateAPIView):
+    queryset = Apartment.objects.all()
+    serializer_class = ApartmentSerializer
+    permission_classes = (AllowAny,)
