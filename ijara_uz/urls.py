@@ -10,4 +10,7 @@ urlpatterns = [
     path('user/<str:phone>', views.UserDetailView.as_view()),
 
     path('apartment/', views.ApartmentListCreateView.as_view()),
+    path('apartment/<int:pk>', views.ApartmentDetailView.as_view()),
+
+    path('apartment/search/', views.search)
 ]
