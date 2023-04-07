@@ -90,3 +90,18 @@ class Apartment(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Jobs(models.Model):
+    title = models.CharField(max_length=200)
+    city = models.CharField(max_length=200)
+    address = models.CharField(max_length=200)
+    description = models.TextField(max_length=1500)
+    salary = models.FloatField()
+    skills = models.TextField(max_length=500)
+    company = models.CharField(max_length=200, blank=False, null=False)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    list_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

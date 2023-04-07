@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, User, Apartment
+from .models import CustomUser, User, Apartment, Jobs
 from django.contrib.auth.password_validation import validate_password
 
 
@@ -73,4 +73,13 @@ class ApartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Apartment
+        fields = '__all__'
+
+
+class JobsSerializer(serializers.ModelSerializer):
+    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    list_date = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Jobs
         fields = '__all__'

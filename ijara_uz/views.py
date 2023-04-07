@@ -6,9 +6,9 @@ from rest_framework.generics import (CreateAPIView, ListAPIView,
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from ijara_uz.models import CustomUser, User, Apartment
+from ijara_uz.models import CustomUser, User, Apartment, Jobs
 from ijara_uz.permissions import IsOwnerOrReadOny
-from ijara_uz.serializers import RegisterSerializer, UserSerializer, ApartmentSerializer
+from ijara_uz.serializers import RegisterSerializer, UserSerializer, ApartmentSerializer, JobsSerializer
 
 
 # Create your views here.
@@ -84,4 +84,30 @@ def search(request):
             Q(city__icontains=query)
         ).distinct()
     serializer = ApartmentSerializer(result, many=True)
+    return Response(serializer.data)
+
+
+class JobsListCreateView(ListCreateAPIView):
+    queryset = Jobs.objects.all()
+    serializer_class = JobsSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+class JobsDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Jobs.objects.all()
+    serializer_class = JobsSerializer
+    permission_classes = (IsOwnerOrReadOny,)
+
+
+@api_view(('GET',))
+def job_search(request):
+    result = Jobs.objects.all()
+    query = request.GET.get("query")
+    if query:
+        result = result.filter(
+            Q(title__icontains=query) | Q(address__icontains=query) | Q(description__icontains=query) |
+            Q(list_date__icontains=query) | Q(salary__icontains=query) | Q(skills__icontains=query) |
+            Q(city__icontains=query) | Q(company__icontains=query)
+        )
+    serializer = JobsSerializer(result, many=True)
     return Response(serializer.data)
